@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>识客 — 设计工作室专属客户问卷系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans SC"', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7f4',
+                            100: '#d9efe3',
+                            200: '#b3dfc7',
+                            300: '#85c9a5',
+                            400: '#56af82',
+                            500: '#3a9d6e',
+                            600: '#2d7e58',
+                            700: '#286649',
+                            800: '#24513c',
+                            900: '#1e4332',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-font-smoothing: antialiased; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f0f7f4 0%, #e8f5f0 40%, #ffffff 100%);
+        }
+        .card-hover {
+            transition: all 0.25s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0,0,0,0.12);
+        }
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2rem !important; }
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+
+    <!-- Nav -->
+    <nav class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40">
+        <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-xl font-bold text-brand-600">识客</span>
+                <span class="text-xs text-gray-400 mt-1">· shike.app</span>
+            </div>
+            <a href="#contact" class="text-sm text-brand-600 hover:text-brand-700 font-medium">联系我们</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="gradient-bg pt-20 pb-24 md:pt-28 md:pb-32">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight">
+                把客户需求问清楚，<br class="hidden sm:block">从第一个链接开始
+            </h1>
+            <p class="mt-6 text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                专为设计工作室打造的可视化问卷系统。<br>
+                告别纸笔和问卷星，让客户用图片点选需求偏好，你实时收到结构化数据。
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#contact" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 transition-colors shadow-lg shadow-brand-600/20">
+                    了解详情
+                </a>
+                <a href="#features" class="inline-flex items-center justify-center px-8 py-3.5 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors">
+                    看看功能
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem / Solution -->
+    <section class="py-20 md:py-28">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+                <div>
+                    <span class="text-xs font-semibold text-brand-500 uppercase tracking-widest">痛点</span>
+                    <h2 class="mt-3 text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                        第一次接触客户，<br>需求问不全、记不牢
+                    </h2>
+                    <ul class="mt-6 space-y-4 text-gray-500">
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>
+                            <span>纸笔手写，回头再录入，信息有遗漏</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>
+                            <span>微信发文字问风格偏好，客户说不清楚</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>
+                            <span>纯文字表单太抽象，风格偏好说不清楚</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>
+                            <span>跟进的客户多了，需求混在一起找不到</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-8 md:p-10">
+                    <span class="text-xs font-semibold text-brand-500 uppercase tracking-widest">识客方案</span>
+                    <h3 class="mt-3 text-2xl md:text-3xl font-bold text-brand-800 leading-tight">
+                        客户点一点，你拿结果
+                    </h3>
+                    <ul class="mt-6 space-y-4 text-brand-700/80">
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0"></span>
+                            <span>发送一个链接，客户在手机上5-15分钟填完</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0"></span>
+                            <span>装修风格用真实图片点选，所见即所得</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0"></span>
+                            <span>提交后即时通知，需求一目了然</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0"></span>
+                            <span>所有客户数据归档可查，告别无头案</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-20 md:py-28 bg-gray-50">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center">
+                <span class="text-xs font-semibold text-brand-500 uppercase tracking-widest">功能</span>
+                <h2 class="mt-3 text-3xl md:text-4xl font-bold text-gray-900">为设计工作室量身打造</h2>
+                <p class="mt-4 text-gray-500 max-w-xl mx-auto">不是通用的表单工具，而是理解设计业务需求的专业系统</p>
+            </div>
+
+            <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-xl mb-4">🖼</div>
+                    <h3 class="font-semibold text-gray-900">风格可视化选择</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">内置9大装修风格分类 + 真实案例图片，客户直接点选偏好，比文字描述精准十倍。</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-xl mb-4">📋</div>
+                    <h3 class="font-semibold text-gray-900">双版本策略</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">轻量版（5分钟）适合初接触客户快速收集基本信息；完整版（15分钟）签约前详细确认需求。</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-xl mb-4">📊</div>
+                    <h3 class="font-semibold text-gray-900">结构化数据归档</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">每位客户的预算、风格、空间需求、联系人信息，全部结构化存储，随时调取。</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="bg-white rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-xl mb-4">🔔</div>
+                    <h3 class="font-semibold text-gray-900">实时通知</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">客户提交问卷后即时通知到邮箱，不错过任何一个潜在订单。</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="bg-white rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-xl mb-4">📎</div>
+                    <h3 class="font-semibold text-gray-900">文件上传</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">客户可以上传户型图、参考图片，你第一时间拿到原始素材。</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="bg-white rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-xl mb-4">🔗</div>
+                    <h3 class="font-semibold text-gray-900">专属品牌链接</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">每个工作室拥有自己的子域名，客户看到的是你的品牌，不是第三方工具。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="py-20 md:py-28">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center">
+                <span class="text-xs font-semibold text-brand-500 uppercase tracking-widest">使用流程</span>
+                <h2 class="mt-3 text-3xl md:text-4xl font-bold text-gray-900">三步上手</h2>
+            </div>
+            <div class="mt-14 grid md:grid-cols-3 gap-8 relative">
+                <!-- Step 1 -->
+                <div class="text-center relative">
+                    <div class="w-14 h-14 rounded-full bg-brand-600 text-white text-xl font-bold flex items-center justify-center mx-auto shadow-lg shadow-brand-600/20">1</div>
+                    <h3 class="mt-5 font-semibold text-gray-900">定制问卷</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">根据你的业务需求，我们来配置问卷内容、风格图片、问题选项。一次定制，长期复用。</p>
+                </div>
+                <!-- Arrow -->
+                <div class="hidden md:block absolute top-7 left-[calc(33%+1rem)] right-[calc(66%-1rem)] h-px border-t-2 border-dashed border-brand-200"></div>
+                <!-- Step 2 -->
+                <div class="text-center relative">
+                    <div class="w-14 h-14 rounded-full bg-brand-600 text-white text-xl font-bold flex items-center justify-center mx-auto shadow-lg shadow-brand-600/20">2</div>
+                    <h3 class="mt-5 font-semibold text-gray-900">发送链接</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">初次接触客户时，直接把问卷链接发过去 —— 微信、邮件都行，客户手机打开即填。</p>
+                </div>
+                <!-- Arrow -->
+                <div class="hidden md:block absolute top-7 left-[calc(66%+1rem)] right-[calc(33%-1rem)] h-px border-t-2 border-dashed border-brand-200"></div>
+                <!-- Step 3 -->
+                <div class="text-center">
+                    <div class="w-14 h-14 rounded-full bg-brand-600 text-white text-xl font-bold flex items-center justify-center mx-auto shadow-lg shadow-brand-600/20">3</div>
+                    <h3 class="mt-5 font-semibold text-gray-900">接收结果</h3>
+                    <p class="mt-2 text-sm text-gray-500 leading-relaxed">客户提交后自动通知，所有数据归档在管理后台，签单时直接调取。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- For whom -->
+    <section class="py-20 md:py-28 bg-gray-50">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center">
+                <span class="text-xs font-semibold text-brand-500 uppercase tracking-widest">适用对象</span>
+                <h2 class="mt-3 text-3xl md:text-4xl font-bold text-gray-900">谁在用它</h2>
+            </div>
+            <div class="mt-10 grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl px-6 py-4 border border-gray-100 flex items-center gap-3">
+                    <span class="text-lg">🏠</span>
+                    <span class="text-gray-700">室内设计工作室</span>
+                </div>
+                <div class="bg-white rounded-xl px-6 py-4 border border-gray-100 flex items-center gap-3">
+                    <span class="text-lg">🛋</span>
+                    <span class="text-gray-700">装修公司</span>
+                </div>
+                <div class="bg-white rounded-xl px-6 py-4 border border-gray-100 flex items-center gap-3">
+                    <span class="text-lg">🎨</span>
+                    <span class="text-gray-700">独立设计师</span>
+                </div>
+                <div class="bg-white rounded-xl px-6 py-4 border border-gray-100 flex items-center gap-3">
+                    <span class="text-lg">🏢</span>
+                    <span class="text-gray-700">软装设计公司</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" class="py-20 md:py-28">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">感兴趣？聊聊你的场景</h2>
+            <p class="mt-4 text-gray-500 leading-relaxed">
+                识客目前还在完善阶段，如果你想了解接入方式、定制需求或者纯粹交流想法，欢迎联系。
+            </p>
+            <div class="mt-8 inline-flex items-center gap-3 px-6 py-3.5 bg-brand-50 rounded-xl text-brand-700">
+                <span class="text-sm font-medium">联系邮箱：</span>
+                <a href="mailto:me@shike.app" class="text-sm text-brand-600 hover:text-brand-700 font-medium">me@shike.app</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-100 py-8">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
+            <span>识客 · shike.app</span>
+            <span>专为设计工作室打造的客户问卷系统</span>
+        </div>
+    </footer>
+
+</body>
+</html>
