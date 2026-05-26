@@ -1,72 +1,338 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shike Tools</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
-                        sans: ['"Noto Sans SC"', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
-                    }
-                }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Shike Tools</title>
+  <meta name="description" content="一些用于设计沟通与资料整理的小工具。" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Shike Tools" />
+  <meta property="og:description" content="一些用于设计沟通与资料整理的小工具。" />
+  <meta property="og:url" content="https://shike.app" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Shike Tools" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+            mono: ['"SF Mono"', '"JetBrains Mono"', '"Fira Code"', 'monospace'],
+          },
+          colors: {
+            neutral: {
+              925: '#0f0f0f',
+              850: '#1a1a1a',
+              825: '#202020',
+              800: '#2a2a2a',
+              750: '#333333',
+              700: '#404040',
+              600: '#555555',
+              500: '#808080',
+              400: '#999999',
+              350: '#aaaaaa',
+              300: '#c0c0c0',
+              250: '#cccccc',
+              200: '#d4d4d4',
+              150: '#e0e0e0',
+              100: '#ededed',
+              75: '#f2f2f2',
+              50: '#f7f7f7',
             }
+          }
         }
-    </script>
-    <style>
-        body { -webkit-font-smoothing: antialiased; }
-        .dot-grid {
-            background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
-            background-size: 24px 24px;
-        }
-    </style>
+      }
+    };
+  </script>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #fff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Layout ── */
+    .page-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+    @media (min-width: 480px) {
+      .page-wrap { padding: 72px 40px 80px; }
+    }
+    @media (min-width: 768px) {
+      .page-wrap { padding: 96px 48px 96px; }
+    }
+
+    /* ── Pages (hash routing) ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Header ── */
+    .site-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    @media (min-width: 480px) {
+      .site-title { font-size: 28px; }
+    }
+    .site-subtitle {
+      font-size: 15px;
+      color: #808080;
+      line-height: 1.5;
+    }
+
+    /* ── Tool cards ── */
+    .tool-card {
+      display: block;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .tool-card:hover {
+      border-color: #d0d0d0;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    }
+    .tool-card:active {
+      transform: scale(0.995);
+    }
+    .tool-card h2 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .tool-card p {
+      font-size: 14px;
+      color: #808080;
+      line-height: 1.5;
+    }
+    .tool-card .btn {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      background: #1a1a1a;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .tool-card .btn:hover {
+      background: #333;
+    }
+
+    /* ── Info pages ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      color: #808080;
+      margin-bottom: 32px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: #1a1a1a; }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 480px) {
+      .page-title { font-size: 26px; }
+    }
+
+    .page-body {
+      font-size: 15px;
+      color: #404040;
+      line-height: 1.7;
+    }
+    .page-body p { margin-bottom: 16px; }
+    .page-body p:last-child { margin-bottom: 0; }
+
+    /* ── Footer ── */
+    .site-footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      color: #aaa;
+    }
+    .site-footer a { color: #808080; transition: color 0.15s; }
+    .site-footer a:hover { color: #1a1a1a; }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 20px;
+      margin-bottom: 12px;
+    }
+    .footer-email { color: #bbb; }
+
+    /* ── Transitions ── */
+    .fade-in {
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="font-sans text-gray-700 bg-white dot-grid min-h-screen">
+<body>
 
-    <div class="max-w-2xl mx-auto px-6 pt-24 pb-16">
+<div class="page-wrap" id="app">
 
-        <!-- Header -->
-        <div class="mb-16">
-            <h1 class="font-mono text-3xl text-gray-900 font-bold tracking-tight">Shike Tools</h1>
-            <p class="mt-2 text-gray-400 font-mono text-sm">~ 一些自己用的工具</p>
-        </div>
+  <!-- ════════ HOME PAGE ════════ -->
+  <div class="page active" id="page-home">
+    <header>
+      <h1 class="site-title">Shike Tools</h1>
+      <p class="site-subtitle">一些用于设计沟通与资料整理的小工具。</p>
+    </header>
 
-        <!-- Tools -->
-        <div class="space-y-8">
-            <div class="border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-colors">
-                <h2 class="font-mono text-lg font-semibold text-gray-900">survey</h2>
-                <p class="mt-2 text-sm text-gray-500 leading-relaxed">
-                    设计工作室用的客户需求问卷工具。发送链接给客户，手机打开即填，提交结果自动归档。
-                </p>
-            </div>
-
-            <div class="border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-colors opacity-50">
-                <h2 class="font-mono text-lg font-semibold text-gray-900">dashboard</h2>
-                <p class="mt-2 text-sm text-gray-500 leading-relaxed">
-                    数据看板。还在想做什么，先占个位。
-                </p>
-            </div>
-
-            <div class="border border-gray-200 rounded-xl p-6 hover:border-gray-300 transition-colors opacity-50">
-                <h2 class="font-mono text-lg font-semibold text-gray-900">more</h2>
-                <p class="mt-2 text-sm text-gray-500 leading-relaxed">
-                    更多工具开发中。
-                </p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="mt-20 pt-8 border-t border-gray-100 text-xs text-gray-300 font-mono">
-            <span>shike.app</span>
-            <span class="mx-2">·</span>
-            <span class="text-gray-200">{ tools for the curious }</span>
-        </div>
-
+    <div style="margin-top: 40px;">
+      <a class="tool-card" href="https://yili.shike.app/survey/light" target="_blank" rel="noopener">
+        <h2>survey</h2>
+        <p>用于整理客户生活偏好、空间习惯与设计需求的记录工具。</p>
+        <span class="btn">打开工具</span>
+      </a>
     </div>
+
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="#" onclick="navigate('home'); return false;" style="color:#1a1a1a;font-weight:500;">Home</a>
+        <a href="#about" onclick="navigate('about'); return false;">About</a>
+        <a href="#privacy" onclick="navigate('privacy'); return false;">Privacy</a>
+        <a href="#terms" onclick="navigate('terms'); return false;">Terms</a>
+        <a href="#contact" onclick="navigate('contact'); return false;">Contact</a>
+      </div>
+      <div>
+        shike.app &middot;
+        <span class="footer-email">contact@shike.app</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ════════ ABOUT PAGE ════════ -->
+  <div class="page fade-in" id="page-about">
+    <a href="#" class="back-link" onclick="navigate('home'); return false;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <h2 class="page-title">About</h2>
+    <div class="page-body">
+      <p>Shike Tools 是一组围绕设计沟通、需求整理和项目记录的小工具。</p>
+      <p>最初来自个人工作流，主要用于让前期沟通更清晰、有序。每个工具都解决一个具体问题——让信息不遗漏，让沟通有依据。</p>
+      <p>目前主要工具是 survey，用于替代传统表格和碎片化聊天记录，把客户的空间需求、生活偏好和功能诉求整合到一份结构化记录中。</p>
+      <p>后续会继续补充其他辅助工具。</p>
+    </div>
+  </div>
+
+  <!-- ════════ PRIVACY PAGE ════════ -->
+  <div class="page fade-in" id="page-privacy">
+    <a href="#" class="back-link" onclick="navigate('home'); return false;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <h2 class="page-title">Privacy</h2>
+    <div class="page-body">
+      <p>通过 Shike Tools 提交的表单数据仅用于需求整理和项目沟通，不会公开展示。</p>
+      <p>我们不会将您的数据出售给第三方，也不会将其用于与项目无关的目的。</p>
+      <p>数据通过加密连接传输，存储在服务器数据库中，仅项目相关人员可访问。</p>
+      <p>如需删除数据，请联系 contact@shike.app。</p>
+    </div>
+  </div>
+
+  <!-- ════════ TERMS PAGE ════════ -->
+  <div class="page fade-in" id="page-terms">
+    <a href="#" class="back-link" onclick="navigate('home'); return false;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <h2 class="page-title">Terms</h2>
+    <div class="page-body">
+      <p>Shike Tools 按现状提供，不提供任何明示或暗示的保证。</p>
+      <p>使用者应自行确认所提交内容的准确性和完整性。</p>
+      <p>为了您的信息安全，请不要在表单中提交身份证号码、银行卡信息、密码等敏感个人信息。</p>
+      <p>我们保留在不事先通知的情况下更新这些条款的权利。</p>
+    </div>
+  </div>
+
+  <!-- ════════ CONTACT PAGE ════════ -->
+  <div class="page fade-in" id="page-contact">
+    <a href="#" class="back-link" onclick="navigate('home'); return false;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <h2 class="page-title">Contact</h2>
+    <div class="page-body">
+      <p>如有问题或需求，可通过以下方式联系：</p>
+      <p>
+        <strong>Email：</strong>
+        <a href="mailto:contact@shike.app" style="color:#1a1a1a;text-decoration:underline;text-underline-offset:2px;">contact@shike.app</a>
+      </p>
+      <p style="margin-top:24px;">
+        如需删除已提交的数据、反馈使用问题，或了解工具的使用方式，均可通过上述邮箱联系。
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Hash-based routing ──
+  function navigate(page) {
+    // Update hash (silently for home)
+    if (page === 'home') {
+      history.pushState(null, '', window.location.pathname);
+    } else {
+      history.pushState(null, '', '#' + page);
+    }
+    showPage(page);
+  }
+
+  function showPage(page) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    // Show target
+    var target = document.getElementById('page-' + page);
+    if (target) {
+      target.classList.add('active');
+    }
+    // Scroll to top on mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Handle browser back/forward
+  window.addEventListener('popstate', function() {
+    var hash = window.location.hash.replace('#', '') || 'home';
+    showPage(hash);
+  });
+
+  // Initial page from hash
+  (function() {
+    var hash = window.location.hash.replace('#', '') || 'home';
+    showPage(hash);
+  })();
+</script>
 
 </body>
 </html>
