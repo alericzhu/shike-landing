@@ -169,7 +169,6 @@
     <div class="nav-right">
       <a class="ghost" href="#page-demo" data-zh="示例" data-en="Example">示例</a>
       <a class="ghost" href="#" id="langToggle">中 / EN</a>
-      <a class="button" href="#page-demo" data-zh="查看示例" data-en="View example">查看示例</a>
     </div>
   </div>
 </header>
@@ -410,58 +409,79 @@ function toggleLang(e) {
 
 // ── Hash routing ──
 var SUBPAGE_IDS = ['page-about', 'page-demo', 'page-privacy', 'page-terms'];
+var SECTION_IDS = ['about', 'notes', 'contact'];
+
+function navigate(page) {
+  var hash = page;
+  if (page === 'home' || !page) {
+    hash = '';
+  }
+  history.pushState(null, '', hash ? '#' + hash : window.location.pathname);
+  showPage(page || 'home');
+}
 
 function navigateHome() {
-  history.pushState(null, '', window.location.pathname);
-  showHome();
+  navigate('home');
 }
 
-function showHome() {
-  var hp = document.getElementById('homepage');
-  var hdr = document.querySelector('header');
-  hp.style.display = '';
-  hdr.style.display = '';
-  SUBPAGE_IDS.forEach(function(id) {
-    document.getElementById(id).classList.remove('active');
-  });
+function showPage(page) {
+  var isHome = !page || page === 'home';
+  var homepage = document.getElementById('homepage');
+  var header = document.querySelector('header');
+
+  // show/hide homepage vs subpages
+  if (isHome) {
+    homepage.style.display = '';
+    header.style.display = '';
+    // Hide all subpages
+    SUBPAGE_IDS.forEach(function(id) {
+      document.getElementById(id).classList.remove('active');
+    });
+  } else if (SUBPAGE_IDS.indexOf(page) !== -1) {
+    homepage.style.display = 'none';
+    header.style.display = 'none';
+    SUBPAGE_IDS.forEach(function(id) {
+      var el = document.getElementById(id);
+      el.classList.toggle('active', id === page);
+    });
+  }
+
+  // section scroll on homepage
+  if (isHome && SECTION_IDS.indexOf(page) !== -1) {
+    page = 'home';
+  }
+  // Actually handle section scroll for initial load
+  if (page === 'about' || page === 'notes' || page === 'contact') {
+    var target = document.getElementById(page);
+    if (target && !isHome) {
+      // Wait a tick for DOM
+      setTimeout(function() { target.scrollIntoView({ behavior: 'smooth' }); }, 50);
+    }
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function showSubpage(id) {
-  var hp = document.getElementById('homepage');
-  var hdr = document.querySelector('header');
-  hp.style.display = 'none';
-  hdr.style.display = 'none';
-  SUBPAGE_IDS.forEach(function(sid) {
-    document.getElementById(sid).classList.toggle('active', sid === id);
-  });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function scrollToSection(id) {
-  showHome();
-  setTimeout(function() {
-    var target = document.getElementById(id);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  }, 60);
 }
 
 function handleHash() {
   var hash = window.location.hash.replace('#', '') || 'home';
 
-  // Section anchors on homepage
+  // Check if it's a section anchor on homepage
   if (hash === 'about' || hash === 'notes' || hash === 'contact') {
-    scrollToSection(hash);
+    showPage('home');
+    setTimeout(function() {
+      var target = document.getElementById(hash);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
     return;
   }
 
-  // Subpages
+  // Subpage
   if (SUBPAGE_IDS.indexOf(hash) !== -1) {
-    showSubpage(hash);
+    showPage(hash);
     return;
   }
 
-  showHome();
+  showPage('home');
 }
 
 window.addEventListener('popstate', handleHash);
