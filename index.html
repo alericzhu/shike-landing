@@ -203,16 +203,20 @@
   <div class="page active" id="page-home">
     <header>
       <h1 class="site-title">Shike Tools</h1>
-      <p class="site-subtitle">一些用于设计沟通与资料整理的小工具。</p>
+      <p class="site-subtitle">用于整理设计需求、生活习惯与空间偏好的小工具。</p>
     </header>
 
     <div style="margin-top: 40px;">
-      <a class="tool-card" href="https://yili.shike.app/survey/light" target="_blank" rel="noopener">
-        <h2>survey</h2>
-        <p>用于整理客户生活偏好、空间习惯与设计需求的记录工具。</p>
-        <span class="btn">打开工具</span>
+      <a class="tool-card" href="#survey-info" onclick="navigate('survey-info'); return false;">
+        <h2>Design Survey</h2>
+        <p>用于前期设计沟通的需求记录工具。适合在项目开始前收集客户的生活方式、审美偏好与空间需求。</p>
+        <span class="btn">了解使用方式</span>
       </a>
     </div>
+
+    <p style="margin-top: 24px; font-size: 13px; color: #aaa;">
+      Originally built for an interior design studio workflow.
+    </p>
 
     <footer class="site-footer">
       <div class="footer-links">
@@ -224,7 +228,10 @@
       </div>
       <div>
         shike.app &middot;
-        <span class="footer-email">contact@shike.app</span>
+        <span style="color: #bbb;">Independent tools for design conversations.</span>
+      </div>
+      <div style="margin-top: 4px; color: #bbb;">
+        contact@shike.app
       </div>
     </footer>
   </div>
@@ -271,6 +278,20 @@
       <p>使用者应自行确认所提交内容的准确性和完整性。</p>
       <p>为了您的信息安全，请不要在表单中提交身份证号码、银行卡信息、密码等敏感个人信息。</p>
       <p>我们保留在不事先通知的情况下更新这些条款的权利。</p>
+    </div>
+  </div>
+
+  <!-- ════════ SURVEY INFO PAGE ════════ -->
+  <div class="page fade-in" id="page-survey-info" style="padding-top: 0;">
+    <a href="#" class="back-link" onclick="navigate('home'); return false;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <h2 class="page-title">Design Survey</h2>
+    <div class="page-body">
+      <p>Design Survey 是一个用于室内设计前期沟通的需求记录工具。</p>
+      <p>它最初来自个人工作流，用来替代零散的微信聊天和通用问卷，让客户需求、生活习惯、风格偏好和空间使用方式更容易被整理和回看。</p>
+      <p style="margin-top: 24px;">当前页面只做介绍，不开放直接注册。需要试用或了解部署方式，可以通过 <a href="mailto:contact@shike.app" style="color:#1a1a1a;text-decoration:underline;text-underline-offset:2px;">contact@shike.app</a> 联系。</p>
     </div>
   </div>
 
