@@ -1,411 +1,436 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shike — 设计需求调研系统</title>
-  <style>
-    :root{
-      --bg:#f5f4f1;
-      --card:#ffffff;
-      --text:#111111;
-      --muted:#6f747c;
-      --light:#9aa0a8;
-      --border:#e7e4de;
-      --accent:#161616;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-      -webkit-font-smoothing:antialiased;
-      line-height:1.65;
-    }
-    a{text-decoration:none;color:inherit}
-    .container{width:min(1180px,calc(100% - 48px));margin:0 auto}
-    header{
-      padding:28px 0;
-      border-bottom:1px solid rgba(0,0,0,.05);
-      position:sticky;
-      top:0;
-      backdrop-filter:blur(12px);
-      background:rgba(245,244,241,.78);
-      z-index:10;
-    }
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .logo{font-size:22px;font-weight:700;letter-spacing:-.03em}
-    .nav-links{display:flex;gap:28px;color:var(--muted);font-size:15px}
-    .nav-right{display:flex;align-items:center;gap:16px}
-    .ghost{color:var(--muted);font-size:15px}
-    .button{background:var(--accent);color:white;padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600}
-    .hero{padding:100px 0 78px;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#6d7278;border:1px solid var(--border);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.72);margin-bottom:24px}
-    h1{margin:0 0 22px;font-size:72px;line-height:1.02;letter-spacing:-.06em;max-width:760px}
-    .hero p{margin:0;font-size:20px;color:var(--muted);max-width:620px}
-    .hero-actions{margin-top:36px;display:flex;gap:16px;align-items:center}
-    .secondary{color:var(--muted);font-weight:500}
-    .hero-card{background:var(--card);border:1px solid var(--border);border-radius:28px;padding:30px;box-shadow:0 24px 60px rgba(0,0,0,.05)}
-    .hero-card-top{display:flex;justify-content:space-between;margin-bottom:28px;gap:16px}
-    .status{font-size:13px;color:#4d7c58;background:#eef7f0;padding:6px 10px;border-radius:999px;white-space:nowrap}
-    .survey-preview{border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:16px;background:#fff}
-    .survey-preview strong{display:block;margin-bottom:10px;font-size:15px;line-height:1.45}
-    .line{height:10px;background:#efede8;border-radius:999px;margin-bottom:10px}
-    .line.short{width:58%}.line.medium{width:76%}
-    .features{padding:10px 0 88px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
-    .feature{background:rgba(255,255,255,.72);border:1px solid var(--border);border-radius:22px;padding:28px}
-    .feature h3{margin:0 0 12px;font-size:20px;letter-spacing:-.03em}
-    .feature p{margin:0;color:var(--muted);font-size:15px}
-    .section-title{margin:0 0 18px;font-size:40px;letter-spacing:-.05em}
-    .workflow{padding:30px 0 90px}
-    .workflow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-    .step{background:white;border:1px solid var(--border);border-radius:20px;padding:24px}
-    .step-num{color:var(--light);font-size:13px;margin-bottom:12px}
-    .step h4{margin:0 0 10px;font-size:18px}
-    .step p{margin:0;color:var(--muted);font-size:14px}
-    .quote{padding:84px 0}
-    .quote-box{background:#121212;color:white;border-radius:32px;padding:52px}
-    .quote-box p{margin:0;font-size:34px;line-height:1.35;letter-spacing:-.04em;max-width:920px}
-    .quote-meta{margin-top:26px;color:rgba(255,255,255,.58);font-size:15px}
-    footer{padding:38px 0 70px;border-top:1px solid rgba(0,0,0,.06);display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;color:var(--muted);font-size:14px}
-    .footer-links{display:flex;gap:20px;flex-wrap:wrap}
-    .footer-links a:hover{color:var(--text)}
-
-    /* ── Subpages ── */
-    .subpage{display:none;min-height:100vh;padding:60px 0}
-    .subpage.active{display:block}
-    .subpage-wrap{width:min(780px,calc(100% - 48px));margin:0 auto}
-    .subpage-back{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--muted);margin-bottom:32px;cursor:pointer}
-    .subpage-back:hover{color:var(--text)}
-    .subpage h2{margin:0 0 22px;font-size:36px;letter-spacing:-.05em;line-height:1.15}
-    .subpage-body{font-size:16px;color:#444a50;line-height:1.75;max-width:650px}
-    .subpage-body p{margin-bottom:20px}
-    .subpage-body a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
-
-    /* ── Demo survey ── */
-    .demo-header{margin-bottom:36px}
-    .demo-header .eyebrow{margin-bottom:14px}
-    .demo-header h2{margin:0 0 12px;font-size:30px;letter-spacing:-.04em}
-    .demo-header p{margin:0;color:var(--muted);font-size:16px}
-    .demo-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px;margin-bottom:22px}
-    .demo-card label{display:block;font-weight:600;font-size:16px;margin-bottom:14px;line-height:1.45}
-    .demo-card input[type="text"],.demo-card textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;font-family:inherit;background:#faf9f6;color:var(--text)}
-    .demo-card textarea{resize:vertical;min-height:80px}
-    .demo-options{display:flex;flex-wrap:wrap;gap:10px}
-    .demo-option{padding:10px 16px;border:1px solid var(--border);border-radius:999px;font-size:14px;cursor:pointer;background:#faf9f6}
-    .demo-option.selected{border-color:var(--accent);background:var(--accent);color:white}
-    .demo-images{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .demo-image{aspect-ratio:1;border-radius:14px;border:2px solid var(--border);cursor:pointer;background:#efede8;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:12px;padding:8px}
-    .demo-image.selected{border-color:var(--accent)}
-    .demo-submit{margin-top:10px}
-    .demo-success{background:#eef7f0;border:1px solid #cde0d0;border-radius:18px;padding:28px 32px;margin-top:22px;display:none}
-    .demo-success.show{display:block}
-    .demo-success strong{display:block;font-size:18px;margin-bottom:6px}
-    .demo-success p{margin:0;color:#4d7c58;font-size:15px}
-
-    @media(max-width:980px){.hero{grid-template-columns:1fr;padding-top:72px}.features{grid-template-columns:1fr}.workflow-grid{grid-template-columns:1fr 1fr}h1{font-size:54px}}
-    @media(max-width:640px){.container{width:min(100% - 32px,1180px)}.subpage-wrap{width:min(100% - 32px,780px)}.nav-links{display:none}h1{font-size:42px}.hero p{font-size:18px}.workflow-grid{grid-template-columns:1fr}.quote-box{padding:34px}.quote-box p{font-size:26px}.demo-images{grid-template-columns:repeat(2,1fr)}.hero-actions{flex-wrap:wrap}.subpage h2{font-size:28px}}
-  </style>
+  <meta name="description" content="Shike 识客是一个用于室内设计前期沟通的需求调研与摘要整理工具。" />
+  <title>Shike 识客 — 室内设计需求调研工具</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-
-<header>
-  <div class="container nav">
-    <div class="logo">Shike</div>
-    <div class="nav-links">
-      <a href="#about" data-en="About" data-zh="关于">关于</a>
-      <a href="#notes" data-en="Notes" data-zh="记录">记录</a>
-      <a href="#contact" data-en="Contact" data-zh="联系">联系</a>
+<body data-lang="zh">
+  <header>
+    <div class="container nav">
+      <div class="logo" data-route="/">Shike</div>
+      <div class="nav-links">
+        <a href="#notes" data-anchor="notes" data-i18n="nav.product">产品说明</a>
+        <a href="#questionnaire-system" data-anchor="questionnaire-system" data-i18n="nav.structure">问卷结构</a>
+        <a href="/demo-result" data-route="/demo-result" data-i18n="nav.result">示例结果</a>
+      </div>
+      <div class="nav-right">
+        <button class="ghost" type="button" id="langToggle">中 / EN</button>
+        <a class="button" href="/demo" data-route="/demo" data-i18n="nav.cta">体验问卷</a>
+      </div>
     </div>
-    <div class="nav-right">
-      <a class="ghost" href="#page-demo" data-en="Example" data-zh="示例">示例</a>
-      <a class="ghost" href="#" id="langToggle">中 / EN</a>
-    </div>
-  </div>
-</header>
+  </header>
 
-<div id="homepage">
-<main class="container">
-  <section class="hero">
+  <main>
+    <section id="page-home" class="page active">
+      <div class="container">
+        <section class="hero">
+          <div>
+            <div class="eyebrow" data-i18n="home.eyebrow">室内设计需求调研系统</div>
+            <h1 data-i18n="home.title">把客户模糊的表达，整理成设计师能判断的信息。</h1>
+            <p data-i18n="home.lead">Shike 是一个用于室内设计前期沟通的轻量工具，帮助设计师在项目开始前看清生活习惯、空间偏好、审美参考与沟通重点。</p>
+            <div class="hero-actions">
+              <a class="button" href="/demo" data-route="/demo" data-i18n="home.demo">查看示例</a>
+              <a class="secondary" href="#workflow" data-anchor="workflow" data-i18n="home.workflow">了解使用方式 →</a>
+            </div>
+          </div>
+
+          <div class="hero-card" aria-label="Design Survey preview">
+            <div class="hero-card-top">
+              <strong data-i18n="home.cardTitle">Design Survey 设计问卷</strong>
+              <span class="status" data-i18n="home.status">示例流程</span>
+            </div>
+            <div class="survey-preview">
+              <strong data-i18n="home.q1">你的家庭通常如何度过周末在家的时间？</strong>
+              <div class="mini-answer" data-i18n="home.a1">做饭、陪孩子、整理收纳，偶尔有朋友来家里吃饭。</div>
+            </div>
+            <div class="survey-preview visual-preview">
+              <strong data-i18n="home.q2">哪些图片更接近你理想中的居住氛围？</strong>
+              <div class="preview-thumbs">
+                <img src="assets/style-calm-natural.jpg" alt="安静自然的居住氛围参考" />
+                <img src="assets/style-warm-enveloping.jpg" alt="温暖包裹的居住氛围参考" />
+                <img src="assets/style-bright-open.jpg" alt="明亮开阔的居住氛围参考" />
+              </div>
+            </div>
+            <div class="insight-preview">
+              <div class="section-kicker" data-i18n="home.insightKicker">整理结果</div>
+              <p data-i18n="home.insightText">偏好温暖克制；重点关注厨房动线、公共区收纳和“不要太冷”的视觉边界。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="visual-strip" aria-label="Visual references">
+          <div class="visual-copy">
+            <div>
+              <div class="section-kicker" data-i18n="visual.kicker">Visual references</div>
+              <h2 data-i18n="visual.title">让客户先看见感觉，再描述需求。</h2>
+              <p data-i18n="visual.text">很多空间偏好很难靠文字说清。用图片、场景和生活问题一起收集，能更早看出客户真正关心的东西。</p>
+            </div>
+          </div>
+          <div class="image-grid">
+            <div class="image-card large image-card-worktable">
+              <span class="image-label" data-i18n="visual.l1">调研场景</span>
+            </div>
+            <div class="image-card image-card-survey">
+              <div class="mini-phone">
+                <div class="mini-bar"></div>
+                <div class="mini-question"></div>
+                <div class="mini-options">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <span class="image-label" data-i18n="visual.l2">问卷界面</span>
+            </div>
+            <div class="image-card image-card-result">
+              <div class="mini-report">
+                <div class="mini-title"></div>
+                <div class="mini-tags"><span></span><span></span><span></span></div>
+                <div class="mini-lines"><span></span><span></span><span></span></div>
+              </div>
+              <span class="image-label" data-i18n="visual.l3">摘要报告</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="features" id="notes">
+          <div class="section-kicker" data-i18n="notes.kicker">Product notes</div>
+          <h2 class="section-title" data-i18n="notes.title">它解决的是前期沟通里的信息混乱。</h2>
+          <p class="section-desc" data-i18n="notes.desc">Shike 不试图替代设计师判断，而是把客户分散在聊天、图片和口头表达里的信号，提前整理成更容易讨论的材料。</p>
+          <div class="feature-grid">
+            <div class="feature"><h3 data-i18n="notes.item1Title">图片参考比风格名称更有效</h3><p data-i18n="notes.item1Text">很多客户并不能准确描述自己的审美，但通常能快速判断“像不像自己想要的感觉”。</p></div>
+            <div class="feature"><h3 data-i18n="notes.item2Title">居住习惯比风格更重要</h3><p data-i18n="notes.item2Text">做饭频率、收纳方式、作息习惯与家庭关系，往往比风格本身更影响空间布局。</p></div>
+            <div class="feature"><h3 data-i18n="notes.item3Title">提交后生成需求摘要</h3><p data-i18n="notes.item3Text">客户填写完成后，系统会整理生活习惯、审美偏好、空间重点与沟通注意事项，方便设计师快速进入项目判断。</p></div>
+          </div>
+        </section>
+
+        <section class="signal-section">
+          <div>
+            <div class="section-kicker" data-i18n="signal.kicker">From answer to judgment</div>
+            <h2 class="section-title" data-i18n="signal.title">Shike 重点不是多问几题，而是把回答翻译成设计判断。</h2>
+            <p class="section-desc" data-i18n="signal.desc">客户常说的是感受，设计师需要判断的是空间策略。这个工具把两者之间的那一步提前整理出来。</p>
+          </div>
+          <div class="signal-grid">
+            <div class="signal-card">
+              <div class="signal-num">01</div>
+              <h3 data-i18n="signal.s1Title">客户表达</h3>
+              <p data-i18n="signal.s1Text">“想要温馨一点，但不要太乱，也不想看起来像样板间。”</p>
+            </div>
+            <div class="signal-card">
+              <div class="signal-num">02</div>
+              <h3 data-i18n="signal.s2Title">系统整理</h3>
+              <p data-i18n="signal.s2Text">偏好温暖克制的氛围，重视收纳、材质触感和公共区的放松感。</p>
+            </div>
+            <div class="signal-card">
+              <div class="signal-num">03</div>
+              <h3 data-i18n="signal.s3Title">设计沟通</h3>
+              <p data-i18n="signal.s3Text">下一次沟通优先确认生活动线、常用物品数量和对“温暖”的视觉边界。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="questionnaire-section" id="questionnaire-system">
+          <div>
+            <div class="section-kicker" data-i18n="questionnaire.kicker">Survey structure</div>
+            <h2 class="section-title" data-i18n="questionnaire.title">两套问卷，对应不同深度的设计沟通。</h2>
+            <p class="section-desc" data-i18n="questionnaire.desc">真实项目里，客户不一定一开始就愿意填写很长的表。Shike 更适合用轻量版先建立判断，再在项目启动前进入完整版。</p>
+          </div>
+          <div class="questionnaire-grid">
+            <div class="questionnaire-card">
+              <span data-i18n="questionnaire.lightMeta">Light / 约 15 题</span>
+              <h3 data-i18n="questionnaire.lightTitle">快速摸底</h3>
+              <p data-i18n="questionnaire.lightText">收集户型、面积、预算、家庭成员、风格倾向和主要痛点，适合初次沟通或微信转发。</p>
+            </div>
+            <div class="questionnaire-card">
+              <span data-i18n="questionnaire.fullMeta">Full / 约 62 题</span>
+              <h3 data-i18n="questionnaire.fullTitle">完整需求调研</h3>
+              <p data-i18n="questionnaire.fullText">覆盖家庭结构、客餐厅、厨房、卫生间、卧室、服务预期等模块，适合方案启动前。</p>
+            </div>
+            <div class="questionnaire-card">
+              <span data-i18n="questionnaire.resultMeta">Result / 设计师视角</span>
+              <h3 data-i18n="questionnaire.resultTitle">摘要整理</h3>
+              <p data-i18n="questionnaire.resultText">把客户回答整理为需求摘要、画像标签、空间偏好和沟通建议，而不是只留下原始答案。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="workflow" id="workflow">
+          <h2 class="section-title" data-i18n="workflow.title">一个更安静的设计沟通流程。</h2>
+          <p class="section-desc" data-i18n="workflow.desc">先把需求整理清楚，再进入设计判断。</p>
+          <div class="workflow-grid">
+            <div class="step"><div class="step-num">01</div><h4 data-i18n="workflow.s1Title">发送问卷</h4><p data-i18n="workflow.s1Text">在正式沟通前，通过轻量链接收集基础信息与空间习惯。</p></div>
+            <div class="step"><div class="step-num">02</div><h4 data-i18n="workflow.s2Title">整理偏好</h4><p data-i18n="workflow.s2Text">通过图片与问题收集客户的审美倾向与生活方式。</p></div>
+            <div class="step"><div class="step-num">03</div><h4 data-i18n="workflow.s3Title">生成摘要</h4><p data-i18n="workflow.s3Text">提交后生成一份设计师视角的需求摘要，帮助回看重点信息。</p></div>
+            <div class="step"><div class="step-num">04</div><h4 data-i18n="workflow.s4Title">开始设计</h4><p data-i18n="workflow.s4Text">减少重复沟通，让前期方向从一开始就更接近真实需求。</p></div>
+          </div>
+        </section>
+
+        <section class="cta-panel">
+          <div>
+            <div class="section-kicker" data-i18n="cta.kicker">Example</div>
+            <h2 data-i18n="cta.title">先看一个完整结果，再体验问卷流程。</h2>
+            <p data-i18n="cta.text">公开页面只展示示例数据。真实项目是否接入后台、如何处理客户信息，可以在后续产品阶段再决定。</p>
+          </div>
+          <div class="cta-actions">
+            <a class="button" href="/demo-result" data-route="/demo-result" data-i18n="cta.result">查看示例结果</a>
+            <a class="secondary" href="/demo" data-route="/demo" data-i18n="cta.demo">体验示例问卷 →</a>
+          </div>
+        </section>
+
+        <section class="about-panel" id="about-section">
+          <div class="about-box">
+            <div>
+              <div class="section-kicker" data-i18n="aboutHome.kicker">Boundary</div>
+              <h2 class="section-title" data-i18n="aboutHome.title">适合小范围、可信任地使用。</h2>
+            </div>
+            <div>
+              <p data-i18n="aboutHome.p1">Shike 是一个用于室内设计前期沟通的需求整理工具。它不是替代设计师判断，而是帮助把客户的生活习惯、空间偏好、审美参考和项目预期提前整理出来。</p>
+              <p data-i18n="aboutHome.p2">很多项目前期信息会散落在微信聊天、语音、图片和临时笔记里。Shike 试图让这些信息在开始设计前变得更清晰、更容易回看。</p>
+              <div class="about-list">
+                <div class="about-item" data-i18n="aboutHome.a1">适合初次沟通、签约前调研、方案启动前的信息整理。</div>
+                <div class="about-item" data-i18n="aboutHome.a2">公开页面只展示示例，不连接真实项目数据。</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="quote">
+          <div class="quote-box">
+            <p data-i18n="quote.text">大部分客户其实并不知道自己真正喜欢什么。好的需求调研系统，能在设计开始前，把生活习惯与空间偏好提前显现出来。</p>
+            <div class="quote-meta" data-i18n="quote.meta">来自真实室内设计前期沟通场景。</div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="page-demo" class="page">
+      <div class="container subpage">
+        <div class="section-kicker" data-i18n="demo.kicker">Demo</div>
+        <h1 data-i18n="demo.title">示例问卷</h1>
+        <p class="subpage-narrow" data-i18n="demo.lead">这是一个只用于展示体验的示例页面，不连接真实项目，也不会写入真实后台。</p>
+        <div class="demo-layout">
+          <aside class="demo-aside">
+            <h2 data-i18n="demo.asideTitle">住宅设计需求问卷示例</h2>
+            <p data-i18n="demo.asideText">你可以简单体验填写流程。提交后只会显示示例完成提示和需求摘要示例。</p>
+            <div class="demo-note-list">
+              <span data-i18n="demo.note1">约 5 分钟</span>
+              <span data-i18n="demo.note2">包含图片偏好</span>
+              <span data-i18n="demo.note3">提交后生成摘要</span>
+            </div>
+          </aside>
+          <form class="demo-form" id="demoForm">
+            <div class="module-label" data-i18n="demo.module1">项目基础</div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f1">项目阶段</label>
+              <select><option data-i18n="demo.f1o1">初步了解</option><option data-i18n="demo.f1o2">准备启动设计</option><option data-i18n="demo.f1o3">已有平面方案</option></select>
+            </div>
+            <div class="module-label" data-i18n="demo.module2">居住习惯</div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f2">家庭成员和居住状态</label>
+              <textarea data-i18n-placeholder="demo.f2p" placeholder="例如：两位成年人、一位小朋友，偶尔有老人短住。"></textarea>
+            </div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f3">平时最常在家发生的活动？</label>
+              <textarea data-i18n-placeholder="demo.f3p" placeholder="例如：做饭、看书、陪孩子、朋友聚餐、在家办公……"></textarea>
+            </div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f4">你希望家带来的感受是什么？</label>
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f4o1">安静放松</span></label>
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f4o2">明亮开阔</span></label>
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f4o3">温暖有包裹感</span></label>
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f4o4">整洁高效</span></label>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f5">哪些空间最需要优先改善？</label>
+              <div class="choice-grid">
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f5o1">客厅与公共区</span></label>
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f5o2">厨房与餐厅</span></label>
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f5o3">主卧与衣物收纳</span></label>
+                <label class="choice"><input type="checkbox" /> <span data-i18n="demo.f5o4">儿童房 / 书房</span></label>
+              </div>
+            </div>
+            <div class="module-label" data-i18n="demo.module3">审美偏好</div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f6">哪些图片更接近你理想中的居住氛围？</label>
+              <div class="style-grid">
+                <label class="style-choice style-calm"><input type="checkbox" /> <span data-i18n="demo.f6o1">安静自然</span></label>
+                <label class="style-choice style-warm"><input type="checkbox" /> <span data-i18n="demo.f6o2">温暖包裹</span></label>
+                <label class="style-choice style-bright"><input type="checkbox" /> <span data-i18n="demo.f6o3">明亮开阔</span></label>
+                <label class="style-choice style-clean"><input type="checkbox" /> <span data-i18n="demo.f6o4">克制整洁</span></label>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f7">你明确不喜欢什么？</label>
+              <input type="text" data-i18n-placeholder="demo.f7p" placeholder="例如：太冷、太复杂、过度装饰、开放柜太多……" />
+            </div>
+            <div class="module-label" data-i18n="demo.module4">重点问题</div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f8">厨房和收纳的使用习惯</label>
+              <textarea data-i18n-placeholder="demo.f8p" placeholder="例如：工作日常做饭；小电器较多；希望台面尽量清爽。"></textarea>
+            </div>
+            <div class="field">
+              <label class="label" data-i18n="demo.f9">目前最想解决的问题？</label>
+              <input type="text" data-i18n-placeholder="demo.f9p" placeholder="例如：收纳不够、采光不好、动线不顺、房间利用率低……" />
+            </div>
+            <div class="demo-submit">
+              <button class="button" type="submit" data-i18n="demo.submit">提交示例</button>
+              <span class="success" id="demoSuccess" data-i18n="demo.success">示例提交成功。真实数据没有被保存。</span>
+            </div>
+            <div class="content-card" id="summaryCard" style="display:none;margin-top:26px">
+              <h2 data-i18n="demo.summaryTitle">示例需求摘要</h2>
+              <p data-i18n="demo.summaryText">客户偏向安静、温暖、有包裹感的居住氛围；对收纳和厨房动线比较敏感；审美判断更依赖图片而非风格名称。前期沟通时建议先确认家庭成员的日常活动频率，再进入风格选择。</p>
+              <a class="secondary" href="/demo-result" data-route="/demo-result" data-i18n="demo.viewResult">查看完整结果 →</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-demo-result" class="page">
+      <div class="container subpage">
+        <div class="section-kicker" data-i18n="result.kicker">Demo result</div>
+        <h1 data-i18n="result.title">需求摘要</h1>
+        <p class="subpage-narrow" data-i18n="result.lead">以下为示例问卷生成的整理结果，用于展示产品形态，不连接真实项目数据。</p>
+
+        <div class="result-layout">
+          <aside class="demo-aside">
+            <h2 data-i18n="result.asideTitle">住宅项目 A</h2>
+            <p data-i18n="result.asideText">客户偏好已经被整理为设计师可快速浏览的摘要、标签和沟通提示。</p>
+            <div class="result-meta">
+              <span data-i18n="result.metaStage">阶段：准备启动设计</span>
+              <span data-i18n="result.metaType">类型：三居住宅</span>
+              <span data-i18n="result.metaSource">来源：示例问卷</span>
+            </div>
+          </aside>
+
+          <div class="result-stack">
+            <section class="result-card result-summary">
+              <div class="result-card-head">
+                <div>
+                  <div class="section-kicker" data-i18n="result.summaryKicker">Summary</div>
+                  <h2 data-i18n="result.summaryTitle">需求摘要</h2>
+                </div>
+                <span class="status" data-i18n="result.status">已整理</span>
+              </div>
+              <p data-i18n="result.summaryText">客户希望家呈现安静、温暖、易放松的状态。当前最关注收纳、厨房动线和公共区域的采光感，希望空间整洁但不要显得冷淡。审美判断更依赖图片氛围，而不是固定风格名称。</p>
+            </section>
+
+            <section class="result-card">
+              <div class="section-kicker" data-i18n="result.profileKicker">Profile</div>
+              <h2 data-i18n="result.profileTitle">客户画像标签</h2>
+              <div class="tag-list">
+                <span class="tag" data-i18n="result.tag1">偏好安静感</span>
+                <span class="tag" data-i18n="result.tag2">重视收纳效率</span>
+                <span class="tag" data-i18n="result.tag3">高频下厨</span>
+                <span class="tag" data-i18n="result.tag4">关注自然采光</span>
+                <span class="tag" data-i18n="result.tag5">视觉判断型</span>
+              </div>
+            </section>
+
+            <section class="result-card">
+              <div class="section-kicker" data-i18n="result.preferenceKicker">Space preference</div>
+              <h2 data-i18n="result.preferenceTitle">空间偏好</h2>
+              <div class="preference-grid">
+                <div class="preference-item">
+                  <span data-i18n="result.pref1Label">客厅</span>
+                  <strong data-i18n="result.pref1Text">低干扰、适合阅读和短时会客</strong>
+                </div>
+                <div class="preference-item">
+                  <span data-i18n="result.pref2Label">厨房</span>
+                  <strong data-i18n="result.pref2Text">重视操作台面、收纳和清洁便利</strong>
+                </div>
+                <div class="preference-item">
+                  <span data-i18n="result.pref3Label">卧室</span>
+                  <strong data-i18n="result.pref3Text">柔和材质、遮光、减少外露杂物</strong>
+                </div>
+                <div class="preference-item">
+                  <span data-i18n="result.pref4Label">整体氛围</span>
+                  <strong data-i18n="result.pref4Text">温暖克制，避免过度装饰</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="result-card">
+              <div class="section-kicker" data-i18n="result.adviceKicker">Communication</div>
+              <h2 data-i18n="result.adviceTitle">沟通建议</h2>
+              <ul class="advice-list">
+                <li data-i18n="result.advice1">先用图片确认“温暖但不厚重”的边界，避免直接进入风格标签争论。</li>
+                <li data-i18n="result.advice2">重点追问厨房使用频率、采购方式和常用小电器数量。</li>
+                <li data-i18n="result.advice3">在平面方案阶段优先解释收纳逻辑和动线取舍。</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-about" class="page">
+      <div class="container subpage subpage-narrow">
+        <div class="section-kicker" data-i18n="aboutPage.kicker">About</div>
+        <h1 data-i18n="aboutPage.title">关于 Shike</h1>
+        <p data-i18n="aboutPage.lead">Shike 是一组围绕设计沟通、需求整理和项目记录的小工具。</p>
+        <div class="content-card">
+          <h2 data-i18n="aboutPage.h1">使用方式</h2>
+          <p data-i18n="aboutPage.p1">设计师在项目开始前发送问卷链接，客户在手机上填写生活习惯、空间偏好、审美参考与项目预期。设计师再根据这些记录进行前期判断。</p>
+          <h3 data-i18n="aboutPage.h2">它适合谁</h3>
+          <p data-i18n="aboutPage.p2">适合独立设计师、小型设计工作室，以及希望把前期沟通流程标准化的团队。</p>
+          <h3 data-i18n="aboutPage.h3">它不是什么</h3>
+          <p data-i18n="aboutPage.p3">它不是替代设计师判断的系统，也不是公开客户信息的平台。它只是帮助把早期沟通信息整理得更清楚，并在需要时辅助生成设计师视角的需求摘要。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-privacy" class="page">
+      <div class="container subpage subpage-narrow">
+        <div class="section-kicker" data-i18n="privacy.kicker">Privacy</div>
+        <h1 data-i18n="privacy.title">隐私说明</h1>
+        <div class="content-card">
+          <p data-i18n="privacy.p1">通过 Shike 收集的信息，仅用于需求整理、项目沟通和设计前期判断。</p>
+          <ul>
+            <li data-i18n="privacy.l1">不公开展示客户提交内容。</li>
+            <li data-i18n="privacy.l2">不出售客户数据。</li>
+            <li data-i18n="privacy.l3">不建议提交身份证、银行卡、密码等敏感信息。</li>
+            <li data-i18n="privacy.l4">如需删除或更正信息，可以通过 contact@shike.app 联系。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-terms" class="page">
+      <div class="container subpage subpage-narrow">
+        <div class="section-kicker" data-i18n="terms.kicker">Terms</div>
+        <h1 data-i18n="terms.title">使用条款</h1>
+        <div class="content-card">
+          <p data-i18n="terms.p1">Shike 按现状提供，用于辅助设计前期沟通与需求整理。</p>
+          <ul>
+            <li data-i18n="terms.l1">使用者应自行确认提交内容的准确性。</li>
+            <li data-i18n="terms.l2">请勿提交身份证、银行卡、密码等敏感信息。</li>
+            <li data-i18n="terms.l3">示例页面仅用于展示，不代表真实项目数据。</li>
+            <li data-i18n="terms.l4">如有问题，请联系 contact@shike.app。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container" id="contact">
     <div>
-      <div class="eyebrow" data-en="Interior design intake system" data-zh="室内设计需求调研系统">室内设计需求调研系统</div>
-      <h1 data-en="Turn scattered client conversations into structured design insight." data-zh="把零散的客户沟通，整理成真正可用的设计信息。">把零散的客户沟通，整理成真正可用的设计信息。</h1>
-      <p data-en="Shike helps design studios collect lifestyle habits, spatial preferences, visual references and project expectations before the first meeting." data-zh="Shike 用于在正式设计开始前，整理客户的生活习惯、空间偏好、审美参考与项目预期。">Shike 用于在正式设计开始前，整理客户的生活习惯、空间偏好、审美参考与项目预期。</p>
-      <div class="hero-actions">
-        <a class="button" href="#page-demo" data-en="View example" data-zh="查看示例">查看示例</a>
-        <a class="secondary" href="#page-about" data-en="About the workflow →" data-zh="了解使用方式 →">了解使用方式 →</a>
-      </div>
+      <strong>Shike</strong><br/>
+      <span data-i18n="footer.tagline">用于设计沟通的独立工具。</span>
     </div>
-    <div class="hero-card">
-      <div class="hero-card-top">
-        <strong data-en="Design Survey" data-zh="Design Survey 设计问卷">Design Survey 设计问卷</strong>
-        <span class="status" data-en="active" data-zh="已启用">已启用</span>
-      </div>
-      <div class="survey-preview">
-        <strong data-en="How does your family usually spend weekends at home?" data-zh="你的家庭通常如何度过周末在家的时间？">你的家庭通常如何度过周末在家的时间？</strong>
-        <div class="line"></div><div class="line medium"></div><div class="line short"></div>
-      </div>
-      <div class="survey-preview">
-        <strong data-en="Which references feel closest to your ideal atmosphere?" data-zh="哪些图片更接近你理想中的居住氛围？">哪些图片更接近你理想中的居住氛围？</strong>
-        <div class="line medium"></div><div class="line short"></div>
-      </div>
-      <div class="survey-preview">
-        <strong data-en="Do you cook frequently during weekdays?" data-zh="工作日是否经常在家做饭？">工作日是否经常在家做饭？</strong>
-        <div class="line short"></div>
-      </div>
+    <div class="footer-links">
+      <a href="/about" data-route="/about" data-i18n="footer.about">关于</a>
+      <a href="/privacy" data-route="/privacy" data-i18n="footer.privacy">隐私</a>
+      <a href="/terms" data-route="/terms" data-i18n="footer.terms">条款</a>
+      <a href="mailto:contact@shike.app">contact@shike.app</a>
     </div>
-  </section>
-
-  <section class="features" id="notes">
-    <div class="feature">
-      <h3 data-en="Images work better than style labels" data-zh="图片参考比风格名称更有效">图片参考比风格名称更有效</h3>
-      <p data-en="Many clients cannot describe their taste precisely, but they can quickly judge whether an image feels right." data-zh="很多客户并不能准确描述自己的审美，但通常能快速判断“像不像自己想要的感觉”。">很多客户并不能准确描述自己的审美，但通常能快速判断“像不像自己想要的感觉”。</p>
-    </div>
-    <div class="feature">
-      <h3 data-en="Habits matter more than style" data-zh="居住习惯比风格更重要">居住习惯比风格更重要</h3>
-      <p data-en="Cooking frequency, storage habits, routines and family relationships often shape the layout more than visual style." data-zh="做饭频率、收纳方式、作息习惯与家庭关系，往往比风格本身更影响空间布局。">做饭频率、收纳方式、作息习惯与家庭关系，往往比风格本身更影响空间布局。</p>
-    </div>
-    <div class="feature">
-      <h3 data-en="Early communication loses information" data-zh="前期沟通的信息损耗">前期沟通的信息损耗</h3>
-      <p data-en="Many requirements are not absent; they simply get lost in repeated conversations. Structured records reduce that drift." data-zh="很多需求并不是客户“不说”，而是在反复沟通中逐渐丢失。结构化记录能减少这种偏差。">很多需求并不是客户“不说”，而是在反复沟通中逐渐丢失。结构化记录能减少这种偏差。</p>
-    </div>
-    <div class="feature">
-      <h3 data-en="Family dynamics shape priorities" data-zh="家庭关系驱动空间优先级">家庭关系驱动空间优先级</h3>
-      <p data-en="Families with kids need open activity areas, multi-generational homes require accessibility and privacy, pets demand durable materials. Family structure dictates design trade-offs." data-zh="有孩子的家庭更需要公共活动空间，与长辈同住要考虑无障碍与隐私，猫狗宠物则需要耐造的材料。家庭结构决定了设计决策的优先级。">有孩子的家庭更需要公共活动空间，与长辈同住要考虑无障碍与隐私，猫狗宠物则需要耐造的材料。家庭结构决定了设计决策的优先级。</p>
-    </div>
-    <div class="feature">
-      <h3 data-en="Budget frames design choices" data-zh="预算锚定设计取舍">预算锚定设计取舍</h3>
-      <p data-en="A 120㎡ apartment with a ¥200k budget vs. ¥600k calls for fundamentally different approaches. Getting budget range early lets designers focus on viable solutions from the start." data-zh="同样 120㎡ 的房子，20 万和 60 万的方案是完全不同的设计逻辑。问卷阶段明确预算区间，能让设计师更早聚焦在合理的落地路径上。">同样 120㎡ 的房子，20 万和 60 万的方案是完全不同的设计逻辑。问卷阶段明确预算区间，能让设计师更早聚焦在合理的落地路径上。</p>
-    </div>
-  </section>
-
-  <section class="workflow" id="about">
-    <h2 class="section-title" data-en="A calmer way to start projects." data-zh="一个更安静的设计沟通流程。">一个更安静的设计沟通流程。</h2>
-    <div class="workflow-grid">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h4 data-en="Send survey" data-zh="发送问卷">发送问卷</h4>
-        <p data-en="Share a lightweight link before the first meeting to collect basic information and spatial habits." data-zh="在正式沟通前，通过轻量链接收集基础信息与空间习惯。">在正式沟通前，通过轻量链接收集基础信息与空间习惯。</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h4 data-en="Collect preferences" data-zh="整理偏好">整理偏好</h4>
-        <p data-en="Use images and questions to collect visual preferences and lifestyle patterns." data-zh="通过图片与问题收集客户的审美倾向与生活方式。">通过图片与问题收集客户的审美倾向与生活方式。</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h4 data-en="Review records" data-zh="回看记录">回看记录</h4>
-        <p data-en="Keep important details from disappearing inside long chat histories." data-zh="避免信息散落在微信聊天记录里，后期无法回看。">避免信息散落在微信聊天记录里，后期无法回看。</p>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <h4 data-en="Start aligned" data-zh="开始设计">开始设计</h4>
-        <p data-en="Reduce repeated communication and begin with clearer expectations." data-zh="减少重复沟通，让前期方向从一开始就更接近真实需求。">减少重复沟通，让前期方向从一开始就更接近真实需求。</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="quote">
-    <div class="quote-box">
-      <p data-en="Most clients don’t actually know how to describe their style preferences. Good intake systems help surface habits and emotional patterns before design even starts." data-zh="大部分客户其实并不知道自己真正喜欢什么。好的需求调研系统，能在设计开始前，把生活习惯与空间偏好提前显现出来。">大部分客户其实并不知道自己真正喜欢什么。好的需求调研系统，能在设计开始前，把生活习惯与空间偏好提前显现出来。</p>
-      <div class="quote-meta" data-en="Originally built for an interior design studio workflow." data-zh="最初来自一个室内设计工作室的真实工作流。">最初来自一个室内设计工作室的真实工作流。</div>
-    </div>
-  </section>
-</main>
-
-<footer class="container" id="contact">
-  <div>
-    <strong>Shike</strong><br/>
-    <span data-en="Independent tools for design conversations." data-zh="用于设计沟通的独立工具。">用于设计沟通的独立工具。</span>
-  </div>
-  <div class="footer-links">
-    <a href="#page-about" data-en="About" data-zh="关于">关于</a>
-    <a href="#page-privacy" data-en="Privacy" data-zh="隐私">隐私</a>
-    <a href="#page-terms" data-en="Terms" data-zh="条款">条款</a>
-    <a href="mailto:contact@shike.app">contact@shike.app</a>
-  </div>
-</footer>
-</div>
-
-<!-- ═══════ Subpages ═══════ -->
-<div class="subpage" id="page-about">
-  <div class="subpage-wrap">
-    <div class="subpage-back" onclick="showHome()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      <span data-zh="返回" data-en="Back">返回</span>
-    </div>
-    <h2 data-zh="关于 Shike" data-en="About Shike">关于 Shike</h2>
-    <div class="subpage-body">
-      <p data-zh="Shike 是一个围绕设计沟通、需求整理和项目记录的工具。最初来自一个室内设计工作室的真实工作流。" data-en="Shike is a tool for design conversations, requirements gathering and project documentation. Originally built from a real interior design studio workflow.">Shike 是一个围绕设计沟通、需求整理和项目记录的工具。最初来自一个室内设计工作室的真实工作流。</p>
-      <p data-zh="它替代了零散的微信聊天和通用表单，用于在正式设计开始前，把客户的生活习惯、空间偏好、审美参考和项目预期整合到一份结构化记录中。" data-en="It replaces scattered chat messages and generic forms, helping studios consolidate lifestyle habits, spatial preferences, visual references and project expectations into structured records before design begins.">它替代了零散的微信聊天和通用表单，用于在正式设计开始前，把客户的生活习惯、空间偏好、审美参考和项目预期整合到一份结构化记录中。</p>
-      <p data-zh="适合小型设计工作室、独立设计师，以及任何需要让前期沟通更清晰有序的团队。" data-en="Suited for small design studios, independent designers, and any team that wants clearer, more organized early-stage client communication.">适合小型设计工作室、独立设计师，以及任何需要让前期沟通更清晰有序的团队。</p>
-    </div>
-  </div>
-</div>
-
-<div class="subpage" id="page-privacy">
-  <div class="subpage-wrap">
-    <div class="subpage-back" onclick="showHome()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      <span data-zh="返回" data-en="Back">返回</span>
-    </div>
-    <h2 data-zh="隐私" data-en="Privacy">隐私</h2>
-    <div class="subpage-body">
-      <p data-zh="通过 Shike 提交的表单数据仅用于设计需求整理和项目沟通，不会公开展示。" data-en="Data submitted through Shike is used solely for design requirements gathering and project communication. It is not publicly displayed.">通过 Shike 提交的表单数据仅用于设计需求整理和项目沟通，不会公开展示。</p>
-      <p data-zh="我们不会将您的数据出售给第三方，也不会将其用于与项目无关的目的。" data-en="We do not sell your data to third parties, nor use it for purposes unrelated to your project.">我们不会将您的数据出售给第三方，也不会将其用于与项目无关的目的。</p>
-      <p data-zh="数据通过加密连接传输，存储在服务器数据库中，仅项目相关人员可访问。" data-en="Data is transmitted over encrypted connections, stored on our server, and accessible only to project-relevant personnel.">数据通过加密连接传输，存储在服务器数据库中，仅项目相关人员可访问。</p>
-      <p data-zh="为保护您的信息安全，请勿在表单中提交身份证号码、银行卡信息、密码等敏感个人信息。" data-en="For your security, please do not submit sensitive personal information such as ID numbers, bank card details, or passwords in any form.">为保护您的信息安全，请勿在表单中提交身份证号码、银行卡信息、密码等敏感个人信息。</p>
-      <p data-zh="如需删除数据，请联系" data-en="To request data deletion, contact">如需删除数据，请联系 <a href="mailto:contact@shike.app">contact@shike.app</a>。</p>
-    </div>
-  </div>
-</div>
-
-<div class="subpage" id="page-terms">
-  <div class="subpage-wrap">
-    <div class="subpage-back" onclick="showHome()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      <span data-zh="返回" data-en="Back">返回</span>
-    </div>
-    <h2 data-zh="条款" data-en="Terms">条款</h2>
-    <div class="subpage-body">
-      <p data-zh="Shike 按“现状”提供，不提供任何明示或暗示的保证。" data-en="Shike is provided &#x2018;as is&#x2019;, without any express or implied warranty.">Shike 按“现状”提供，不提供任何明示或暗示的保证。</p>
-      <p data-zh="使用者应自行确认所提交内容的准确性和完整性。" data-en="Users are responsible for the accuracy and completeness of the information they submit.">使用者应自行确认所提交内容的准确性和完整性。</p>
-      <p data-zh="为保护您的信息安全，请勿在表单中提交身份证号码、银行卡信息、密码等敏感个人信息。" data-en="For your security, do not submit sensitive personal information such as ID numbers, bank card details, or passwords via any form.">为保护您的信息安全，请勿在表单中提交身份证号码、银行卡信息、密码等敏感个人信息。</p>
-      <p data-zh="我们保留在不事先通知的情况下更新这些条款的权利。" data-en="We reserve the right to update these terms without prior notice.">我们保留在不事先通知的情况下更新这些条款的权利。</p>
-    </div>
-  </div>
-</div>
-
-<div class="subpage" id="page-demo">
-  <div class="subpage-wrap">
-    <div class="subpage-back" onclick="showHome()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      <span data-zh="返回" data-en="Back">返回</span>
-    </div>
-    <div class="demo-header">
-      <div class="eyebrow" data-zh="示例问卷" data-en="Demo Survey">示例问卷</div>
-      <h2 data-zh="设计需求调研" data-en="Design Intake Survey">设计需求调研</h2>
-      <p data-zh="以下是一个示例问卷，用于展示 Shike 的使用方式和界面风格。提交后的数据不会被保存。" data-en="This is a demo survey to show how Shike works. Submitted data will not be saved.">以下是一个示例问卷，用于展示 Shike 的使用方式和界面风格。提交后的数据不会被保存。</p>
-    </div>
-    <div class="demo-card">
-      <label data-zh="你理想中的居住空间有多大？" data-en="What size is your ideal living space?">你理想中的居住空间有多大？</label>
-      <input type="text" id="demoQ1" placeholder="e.g. 80-100㎡" data-zh-placeholder="例如：80-100㎡" data-en-placeholder="e.g. 80-100㎡" />
-    </div>
-    <div class="demo-card">
-      <label data-zh="你最喜欢的室内风格倾向？" data-en="Your preferred interior style?">你最喜欢的室内风格倾向？</label>
-      <div class="demo-options" id="demoQ2">
-        <span class="demo-option" data-val="简约" data-zh="简约" data-en="Minimalist">简约</span>
-        <span class="demo-option" data-val="奶油" data-zh="奶油" data-en="Cream">奶油</span>
-        <span class="demo-option" data-val="原木" data-zh="原木" data-en="Natural Wood">原木</span>
-        <span class="demo-option" data-val="新中式" data-zh="新中式" data-en="Modern Chinese">新中式</span>
-        <span class="demo-option" data-val="轻奢" data-zh="轻奢" data-en="Light Luxury">轻奢</span>
-        <span class="demo-option" data-val="不确定" data-zh="不确定" data-en="Not sure">不确定</span>
-      </div>
-    </div>
-    <div class="demo-card">
-      <label data-zh="以下哪些更接近你想要的氛围？（可多选）" data-en="Which of these feel closest to your desired atmosphere? (multi-select)">以下哪些更接近你想要的氛围？（可多选）</label>
-      <div class="demo-images" id="demoQ3">
-        <div class="demo-image" data-zh="明亮" data-en="Bright">明亮</div>
-        <div class="demo-image" data-zh="温暖" data-en="Warm">温暖</div>
-        <div class="demo-image" data-zh="简洁" data-en="Clean">简洁</div>
-        <div class="demo-image" data-zh="自然" data-en="Natural">自然</div>
-      </div>
-    </div>
-    <div class="demo-card">
-      <label data-zh="你对新空间有什么特殊需求或想法？" data-en="Any special needs or ideas for the space?">你对新空间有什么特殊需求或想法？</label>
-      <textarea id="demoQ4" data-zh-placeholder="描述你的想法…" data-en-placeholder="Describe your ideas..."></textarea>
-    </div>
-    <div class="demo-submit">
-      <button class="button" id="demoSubmit" data-zh="提交示例" data-en="Submit Demo">提交示例</button>
-    </div>
-    <div class="demo-success" id="demoSuccess">
-      <strong data-zh="示例提交成功" data-en="Demo submitted successfully">示例提交成功</strong>
-      <p data-zh="这是一个示例演示，你的回答不会被保存。" data-en="This is a demo — your responses have not been saved.">这是一个示例演示，你的回答不会被保存。</p>
-    </div>
-  </div>
-</div>
-
-<script>
-var currentLang = 'zh';
-function applyLang(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-  document.title = lang === 'zh' ? 'Shike — 设计需求调研系统' : 'Shike — Design Intake System';
-  document.querySelectorAll('[data-zh][data-en]').forEach(function(el) {
-    el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-  });
-  document.querySelectorAll('[data-zh-placeholder]').forEach(function(el) {
-    var key = lang === 'zh' ? 'data-zh-placeholder' : 'data-en-placeholder';
-    var val = el.getAttribute(key);
-    if (val !== null) el.placeholder = val;
-  });
-  document.getElementById('langToggle').textContent = lang === 'zh' ? '中 / EN' : 'EN / 中';
-}
-function toggleLang(e) { e.preventDefault(); applyLang(currentLang === 'zh' ? 'en' : 'zh'); }
-
-var SUBPAGE_IDS = ['page-about', 'page-demo', 'page-privacy', 'page-terms'];
-var SECTION_IDS = ['about', 'notes', 'contact'];
-
-function showHome() {
-  document.getElementById('homepage').style.display = '';
-  document.querySelector('header').style.display = '';
-  SUBPAGE_IDS.forEach(function(id) { document.getElementById(id).classList.remove('active'); });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-function showSubpage(id) {
-  document.getElementById('homepage').style.display = 'none';
-  document.querySelector('header').style.display = 'none';
-  SUBPAGE_IDS.forEach(function(sid) { document.getElementById(sid).classList.toggle('active', sid === id); });
-  window.scrollTo({ top: 0 });
-}
-function scrollToSection(id) {
-  showHome();
-  setTimeout(function() {
-    var t = document.getElementById(id);
-    if (t) t.scrollIntoView({ behavior: 'smooth' });
-  }, 60);
-}
-window.addEventListener('popstate', function() {
-  var hash = window.location.hash.replace('#', '') || 'home';
-  if (SECTION_IDS.indexOf(hash) !== -1) { scrollToSection(hash); return; }
-  if (SUBPAGE_IDS.indexOf(hash) !== -1) { showSubpage(hash); return; }
-  showHome();
-});
-
-function initDemo() {
-  document.querySelectorAll('.demo-option').forEach(function(el) {
-    el.addEventListener('click', function() {
-      el.parentElement.querySelectorAll('.demo-option').forEach(function(o) { o.classList.remove('selected'); });
-      this.classList.add('selected');
-    });
-  });
-  document.querySelectorAll('.demo-image').forEach(function(el) {
-    el.addEventListener('click', function() { this.classList.toggle('selected'); });
-  });
-  document.getElementById('demoSubmit').addEventListener('click', function() {
-    var s = document.getElementById('demoSuccess');
-    s.classList.add('show');
-    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  applyLang('zh');
-  initDemo();
-  document.getElementById('langToggle').addEventListener('click', toggleLang);
-  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
-    a.addEventListener('click', function(e) {
-      var href = a.getAttribute('href');
-      if (href.indexOf('mailto:') === 0) return;
-      e.preventDefault();
-      var hash = href.replace('#', '');
-      if (SECTION_IDS.indexOf(hash) !== -1) { history.pushState(null, '', href); scrollToSection(hash); }
-      else if (SUBPAGE_IDS.indexOf(hash) !== -1) { history.pushState(null, '', href); showSubpage(hash); }
-      else if (hash === '' || hash === 'home') { history.pushState(null, '', window.location.pathname); showHome(); }
-    });
-  });
-});
-</script>
+  </footer>
+  <script src="app.js"></script>
 </body>
 </html>
+
+
+
