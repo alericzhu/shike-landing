@@ -272,7 +272,7 @@
 <!-- ═══════════ ABOUT PAGE ═══════════ -->
 <div class="subpage" id="page-about">
   <div class="subpage-wrap">
-    <div class="subpage-back" onclick="navigateHome()">
+    <div class="subpage-back" onclick="showHome()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       <span data-zh="返回" data-en="Back">返回</span>
     </div>
@@ -288,7 +288,7 @@
 <!-- ═══════════ PRIVACY PAGE ═══════════ -->
 <div class="subpage" id="page-privacy">
   <div class="subpage-wrap">
-    <div class="subpage-back" onclick="navigateHome()">
+    <div class="subpage-back" onclick="showHome()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       <span data-zh="返回" data-en="Back">返回</span>
     </div>
@@ -306,7 +306,7 @@
 <!-- ═══════════ TERMS PAGE ═══════════ -->
 <div class="subpage" id="page-terms">
   <div class="subpage-wrap">
-    <div class="subpage-back" onclick="navigateHome()">
+    <div class="subpage-back" onclick="showHome()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       <span data-zh="返回" data-en="Back">返回</span>
     </div>
@@ -323,7 +323,7 @@
 <!-- ═══════════ DEMO PAGE ═══════════ -->
 <div class="subpage" id="page-demo">
   <div class="subpage-wrap">
-    <div class="subpage-back" onclick="navigateHome()">
+    <div class="subpage-back" onclick="showHome()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       <span data-zh="返回" data-en="Back">返回</span>
     </div>
@@ -385,20 +385,14 @@ function applyLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
   document.title = lang === 'zh' ? 'Shike — 设计需求调研系统' : 'Shike — Design Intake System';
-
-  // data-zh / data-en on all elements
   document.querySelectorAll('[data-zh][data-en]').forEach(function(el) {
     el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
   });
-
-  // placeholder for zh/en
   document.querySelectorAll('[data-zh-placeholder]').forEach(function(el) {
     var key = lang === 'zh' ? 'data-zh-placeholder' : 'data-en-placeholder';
     var val = el.getAttribute(key);
     if (val !== null) el.placeholder = val;
   });
-
-  // language toggle text
   document.getElementById('langToggle').textContent = lang === 'zh' ? '中 / EN' : 'EN / 中';
 }
 
@@ -407,107 +401,58 @@ function toggleLang(e) {
   applyLang(currentLang === 'zh' ? 'en' : 'zh');
 }
 
-// ── Hash routing ──
+// ── Simple hash routing ──
 var SUBPAGE_IDS = ['page-about', 'page-demo', 'page-privacy', 'page-terms'];
-var SECTION_IDS = ['about', 'notes', 'contact'];
+var SECTION_IDS = ['about', 'notes'];
 
-function navigate(page) {
-  var hash = page;
-  if (page === 'home' || !page) {
-    hash = '';
-  }
-  history.pushState(null, '', hash ? '#' + hash : window.location.pathname);
-  showPage(page || 'home');
-}
-
-function navigateHome() {
-  navigate('home');
-}
-
-function showPage(page) {
-  var isHome = !page || page === 'home';
-  var homepage = document.getElementById('homepage');
-  var header = document.querySelector('header');
-
-  // show/hide homepage vs subpages
-  if (isHome) {
-    homepage.style.display = '';
-    header.style.display = '';
-    // Hide all subpages
-    SUBPAGE_IDS.forEach(function(id) {
-      document.getElementById(id).classList.remove('active');
-    });
-  } else if (SUBPAGE_IDS.indexOf(page) !== -1) {
-    homepage.style.display = 'none';
-    header.style.display = 'none';
-    SUBPAGE_IDS.forEach(function(id) {
-      var el = document.getElementById(id);
-      el.classList.toggle('active', id === page);
-    });
-  }
-
-  // section scroll on homepage
-  if (isHome && SECTION_IDS.indexOf(page) !== -1) {
-    page = 'home';
-  }
-  // Actually handle section scroll for initial load
-  if (page === 'about' || page === 'notes' || page === 'contact') {
-    var target = document.getElementById(page);
-    if (target && !isHome) {
-      // Wait a tick for DOM
-      setTimeout(function() { target.scrollIntoView({ behavior: 'smooth' }); }, 50);
-    }
-  }
-
+function showHome() {
+  var hp = document.getElementById('homepage');
+  var hdr = document.querySelector('header');
+  hp.style.display = '';
+  hdr.style.display = '';
+  SUBPAGE_IDS.forEach(function(id) { document.getElementById(id).classList.remove('active'); });
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showSubpage(id) {
+  document.getElementById('homepage').style.display = 'none';
+  document.querySelector('header').style.display = 'none';
+  SUBPAGE_IDS.forEach(function(sid) { document.getElementById(sid).classList.toggle('active', sid === id); });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function scrollToSection(id) {
+  showHome();
+  setTimeout(function() {
+    var t = document.getElementById(id);
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
+  }, 60);
 }
 
 function handleHash() {
   var hash = window.location.hash.replace('#', '') || 'home';
-
-  // Check if it's a section anchor on homepage
-  if (hash === 'about' || hash === 'notes' || hash === 'contact') {
-    showPage('home');
-    setTimeout(function() {
-      var target = document.getElementById(hash);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
-    return;
-  }
-
-  // Subpage
-  if (SUBPAGE_IDS.indexOf(hash) !== -1) {
-    showPage(hash);
-    return;
-  }
-
-  showPage('home');
+  if (SECTION_IDS.indexOf(hash) !== -1) { scrollToSection(hash); return; }
+  if (SUBPAGE_IDS.indexOf(hash) !== -1) { showSubpage(hash); return; }
+  showHome();
 }
 
 window.addEventListener('popstate', handleHash);
 
-// ── Demo page interactions ──
+// ── Demo interactions ──
 function initDemo() {
-  // Single-select options
   document.querySelectorAll('#demoQ2 .demo-option').forEach(function(el) {
     el.addEventListener('click', function() {
       document.querySelectorAll('#demoQ2 .demo-option').forEach(function(o) { o.classList.remove('selected'); });
       this.classList.add('selected');
     });
   });
-
-  // Multi-select images
   document.querySelectorAll('#demoQ3 .demo-image').forEach(function(el) {
-    el.addEventListener('click', function() {
-      this.classList.toggle('selected');
-    });
+    el.addEventListener('click', function() { this.classList.toggle('selected'); });
   });
-
-  // Submit - no backend call
   document.getElementById('demoSubmit').addEventListener('click', function() {
-    var success = document.getElementById('demoSuccess');
-    success.classList.add('show');
-    success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var s = document.getElementById('demoSuccess');
+    s.classList.add('show');
+    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 }
 
@@ -516,28 +461,25 @@ document.addEventListener('DOMContentLoaded', function() {
   applyLang('zh');
   handleHash();
   initDemo();
-
   document.getElementById('langToggle').addEventListener('click', toggleLang);
 
-  // Intercept section anchor clicks
-  document.querySelectorAll('a[href^="#about"], a[href^="#notes"], a[href^="#contact"]').forEach(function(a) {
-    var href = a.getAttribute('href');
-    if (href === '#about' || href === '#notes' || href === '#contact') {
-      a.addEventListener('click', function(e) {
-        e.preventDefault();
-        scrollToSection(href.replace('#', ''));
-      });
-    }
-  });
-
-  // Intercept subpage anchor clicks
-  document.querySelectorAll('a[href^="#page-"]').forEach(function(a) {
+  // Intercept ALL hash links
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
     a.addEventListener('click', function(e) {
+      var href = a.getAttribute('href');
+      // mailto: links
+      if (href.indexOf('mailto:') === 0) return;
       e.preventDefault();
-      var id = a.getAttribute('href').replace('#', '');
-      if (SUBPAGE_IDS.indexOf(id) !== -1) {
-        history.pushState(null, '', '#' + id);
-        showSubpage(id);
+      var hash = href.replace('#', '');
+      if (SECTION_IDS.indexOf(hash) !== -1) {
+        history.pushState(null, '', href);
+        scrollToSection(hash);
+      } else if (SUBPAGE_IDS.indexOf(hash) !== -1) {
+        history.pushState(null, '', href);
+        showSubpage(hash);
+      } else if (hash === '' || hash === 'home') {
+        history.pushState(null, '', window.location.pathname);
+        showHome();
       }
     });
   });
