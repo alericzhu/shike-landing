@@ -1,7 +1,7 @@
 export async function onRequest(context) {
   const { request } = context;
   const url = new URL(request.url);
-  const target = 'http://178.105.174.226' + url.pathname + url.search;
+  const target = 'http://static.226.174.105.178.clients.your-server.de' + url.pathname + url.search;
   const headers = {};
   for (const [k, v] of request.headers) headers[k] = v;
   headers.host = 'yili.shike.app';
