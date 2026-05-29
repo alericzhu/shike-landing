@@ -1,12 +1,12 @@
-# 问卷/管理/设计后台 - 200 代理到 survey.zhuzg.com（不改变地址栏）
-# survey.zhuzg.com 与 Pages 在同一 Cloudflare 账户下，内部路由有效
-/survey/* https://survey.zhuzg.com/survey/:splat 200
-/api/* https://survey.zhuzg.com/api/:splat 200
-/designer https://survey.zhuzg.com/designer 200
-/admin* https://survey.zhuzg.com/admin 200
-/manage/* https://survey.zhuzg.com/manage/:splat 200
-/c/* https://survey.zhuzg.com/c/:splat 200
-/thank-you https://survey.zhuzg.com/thank-you 200
+# 问卷/管理/设计后台 - 200 代理到 VPS（不改变地址栏）
+# VPS nginx 已配 server_name shike.app，接受任意 Host header 返回正确内容
+/survey/* http://178.105.174.226/survey/:splat 200
+/api/* http://178.105.174.226/api/:splat 200
+/designer http://178.105.174.226/designer 200
+/admin* http://178.105.174.226/admin 200
+/manage/* http://178.105.174.226/manage/:splat 200
+/c/* http://178.105.174.226/c/:splat 200
+/thank-you http://178.105.174.226/thank-you 200
 
 # SPA 兜底 - 全返回首页
 /* /index.html 200
