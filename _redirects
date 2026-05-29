@@ -1,11 +1,11 @@
-# 问卷/管理页面 - 302 重定向到 yili.shike.app（会改变地址栏）
-/survey/* https://yili.shike.app/survey/:splat 302
-/api/* https://yili.shike.app/api/:splat 302
-/designer https://yili.shike.app/designer 302
-/admin* https://yili.shike.app/admin 302
-/manage/* https://yili.shike.app/manage/:splat 302
-/c/* https://yili.shike.app/c/:splat 302
-/thank-you https://yili.shike.app/thank-you 302
+# 问卷/管理/设计后台 - 200 代理到 VPS（不改变地址栏）
+/survey/* http://178.105.174.226/survey/:splat 200
+/api/* http://178.105.174.226/api/:splat 200
+/designer http://178.105.174.226/designer 200
+/admin* http://178.105.174.226/admin 200
+/manage/* http://178.105.174.226/manage/:splat 200
+/c/* http://178.105.174.226/c/:splat 200
+/thank-you http://178.105.174.226/thank-you 200
 
-# SPA 兜底
+# SPA 兜底 - 全返回首页
 /* /index.html 200
