@@ -1,1 +1,10 @@
+# 问卷页面 - 代理到后端 VPS（不改变 URL）
+/survey/* https://yili.shike.app/survey/:splat 200
+/api/* https://yili.shike.app/api/:splat 200
+/designer https://yili.shike.app/designer 200
+/admin* https://yili.shike.app/admin 200
+/manage/* https://yili.shike.app/manage/:splat 200
+/c/* https://yili.shike.app/c/:splat 200
+
+# SPA 兜底 - 全返回首页
 /* /index.html 200
