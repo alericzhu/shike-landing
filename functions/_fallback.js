@@ -14,8 +14,10 @@ export async function onRequest(context) {
     return new Response(resp.body, { status: resp.status, headers: rh });
   }
   
-  const handled = ['/survey/', '/api/', '/designer', '/admin', '/manage/', '/c/', '/thank-you'];
+  // Only handle paths NOT already handled by other functions
+  const handled = ['/survey/', '/api/', '/designer', '/admin', '/manage/', '/c/', '/thank-you', '/static/'];
   if (!handled.some(p => url.pathname === p || url.pathname.startsWith(p))) {
+    // For everything else, try to get the static index.html from Pages
     return new Response(null, { status: 302, headers: { 'Location': '/' } });
   }
   return undefined;
