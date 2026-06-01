@@ -4,7 +4,7 @@ export async function onRequest(context) {
   const target = 'http://static.226.174.105.178.clients.your-server.de' + url.pathname + url.search;
   const headers = {};
   for (const [k, v] of request.headers) headers[k] = v;
-  headers.host = 'yili.shike.app';
+  headers.host = url.hostname;
   const resp = await fetch(target, { method: request.method, headers, body: ['GET','HEAD'].includes(request.method) ? null : request.body });
   const rh = {};
   for (const [k, v] of resp.headers) rh[k] = v;
