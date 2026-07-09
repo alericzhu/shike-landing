@@ -36,6 +36,7 @@
     .logo{font-size:22px;font-weight:750;letter-spacing:-.04em;cursor:pointer}
     .nav-links{display:flex;gap:28px;color:var(--muted);font-size:15px}
     .nav-right{display:flex;align-items:center;gap:16px}
+    .nav-demo-link{font-size:14px}
     .nav a:hover,.logo:hover{opacity:.72}
     .ghost{color:var(--muted);font-size:15px;border:0;background:transparent;cursor:pointer;padding:0}
     .button{background:var(--accent);color:white;padding:11px 18px;border-radius:999px;font-size:14px;font-weight:650;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
@@ -221,6 +222,7 @@
       header{padding:18px 0}
       .nav-links{display:none}
       .nav-right{gap:10px}
+      .nav-demo-link{display:none}
       .nav-right .button{display:none}
       h1,.subpage h1{font-size:42px}
       .hero p{font-size:18px}
